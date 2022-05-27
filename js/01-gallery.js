@@ -13,10 +13,10 @@ const galleryItemsMarkup = createGalleryItemsMarkup(galleryItems);
 // додаємо слухача на галерею
 refs.gallery.addEventListener("click", onGalleryItemClick);
 
-// включаємо розмітку в ДОМ-дерево
+// додаємо ДОМ-елементи з розмітки в дерево
 refs.gallery.insertAdjacentHTML("beforeend", galleryItemsMarkup);
 
-// функція, яка створює розмітку
+// функція, яка створює розмітку галереї у вигляді шаблонного рядка
 function createGalleryItemsMarkup(array) {
   return array
     .map(
@@ -45,11 +45,10 @@ function onGalleryItemClick(event) {
     return;
   }
 
-  //забираємо змінні з картинки, по якій клікнули
+  // зберігаємо у змінні потрібні нам значення з картинки, по якій клікнули
   const url = event.target.dataset.source;
   const alt = event.target.alt;
 
-  console.log(event.target);
   openOriginalSizeImage(url, alt);
 }
 
@@ -59,31 +58,18 @@ function openOriginalSizeImage(url, alt) {
     <img src="${url}" alt="${alt}" width="800" height="600">
 `);
 
-  console.log(instance);
   instance.show();
 
+  // додаємо прослуховування клавіатури при відкритому модальному вікні
   window.addEventListener("keydown", onEscKeyPress);
 }
 
+// функція, яка виконується при події клавіатури
 function onEscKeyPress(event) {
   if (event.code === "Escape") {
-    console.log(event.code);
-
     instance.close();
+
+    // знімаємо прослуховування клавіатури при закритті модального вікна
     window.removeEventListener("keydown", onEscKeyPress);
   }
 }
-
-// Завдання 1 - галерея зображень
-// Створи галерею з можливістю кліку по її елементах і перегляду повнорозмірного зображення у модальному вікні. Подивися демо відео роботи галереї.
-
-// Виконуй це завдання у файлах 01-gallery.html і 01-gallery.js. Розбий його на декілька підзавдань:
-
-// Створення і рендер розмітки на підставі масиву даних galleryItems і наданого шаблону елемента галереї.
-
-// Реалізація делегування на div.gallery і отримання url великого зображення.
-
-// Підключення скрипту і стилів бібліотеки модального вікна basicLightbox. Використовуй CDN сервіс jsdelivr і додай у проект посилання на мініфіковані (.min) файли бібліотеки.
-
-// Відкриття модального вікна по кліку на елементі галереї. Для цього ознайомся з документацією і прикладами.
-// Заміна значення атрибута src елемента <img> в модальному вікні перед відкриттям. Використовуй готову розмітку модального вікна із зображенням з прикладів бібліотеки basicLightbox.
