@@ -1,17 +1,22 @@
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
-console.log(galleryItems);
-
+// оголошуємо змінні
 const refs = {
   gallery: document.querySelector(".gallery"),
 };
+let instance = "";
 
+// створюємо розмітку галереї
 const galleryItemsMarkup = createGalleryItemsMarkup(galleryItems);
 
-refs.gallery.insertAdjacentHTML("beforeend", galleryItemsMarkup);
+// додаємо слухача на галерею
 refs.gallery.addEventListener("click", onGalleryItemClick);
 
+// включаємо розмітку в ДОМ-дерево
+refs.gallery.insertAdjacentHTML("beforeend", galleryItemsMarkup);
+
+// функція, яка створює розмітку
 function createGalleryItemsMarkup(array) {
   return array
     .map(
@@ -31,52 +36,43 @@ function createGalleryItemsMarkup(array) {
     .join("");
 }
 
+// функція-колбек, яка запускається при кліку
 function onGalleryItemClick(event) {
   event.preventDefault();
 
+  // перевірка, чи клік по картинці
   if (!event.target.classList.contains("gallery__image")) {
     return;
   }
 
+  //забираємо змінні з картинки, по якій клікнули
   const url = event.target.dataset.source;
   const alt = event.target.alt;
 
+  console.log(event.target);
   openOriginalSizeImage(url, alt);
 }
 
-const instance = basicLightbox.create("", {
-  className: "lightbox",
-});
+// функція, яка відкриває оригінальне зображення на повний екран
+function openOriginalSizeImage(url, alt) {
+  instance = basicLightbox.create(`
+    <img src="${url}" alt="${alt}" width="800" height="600">
+`);
 
-const element = instance.element();
-
-function lightboxHtml(imgUrl, imgCaption) {
-  let htmlValue = `
-  <div class="gallery__item">
-    <a class="gallery__link" href="${imgUrl}">
-      <img
-        class="gallery__image"
-        src="${imgUrl}"
-        data-source="${imgUrl}"
-        alt="${imgCaption}"
-      />
-    </a>
-  </div>
-    `;
-  return htmlValue;
-}
-
-function openOriginalSizeImage(url, caption) {
-  element.innerHTML = lightboxHtml(url, caption);
+  console.log(instance);
   instance.show();
 
-  instance.show(() => console.log(`lightbox now visible`));
+  window.addEventListener("keydown", onEscKeyPress);
 }
 
-// function makeLightbox(url, caption) {
-//   elem.innerHTML = lightboxHtml(url, caption); // update content of lightbox according to the result of lightboxHTML()
-//   instance.show(); //show the lightbox
-// }
+function onEscKeyPress(event) {
+  if (event.code === "Escape") {
+    console.log(event.code);
+
+    instance.close();
+    window.removeEventListener("keydown", onEscKeyPress);
+  }
+}
 
 // Завдання 1 - галерея зображень
 // Створи галерею з можливістю кліку по її елементах і перегляду повнорозмірного зображення у модальному вікні. Подивися демо відео роботи галереї.
